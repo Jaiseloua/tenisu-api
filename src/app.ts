@@ -18,7 +18,7 @@ export function createApp(
     res.status(200).json({
       name: 'Tenisu API',
       endpoints: [
-        'GET /api/players',
+        'GET /api/players?page=1&limit=10',
         'GET /api/players/:id',
         'GET /api/players/stats',
         'POST /api/players',

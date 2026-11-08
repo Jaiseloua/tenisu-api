@@ -6,7 +6,7 @@ Stack : Node.js 20+, TypeScript, Express 5, Jest + Supertest.
 
 **API déployée sur Render : https://tenisu-api-id6d.onrender.com**
 
-- https://tenisu-api-id6d.onrender.com/api/players
+- https://tenisu-api-id6d.onrender.com/api/players?page=1&limit=2
 - https://tenisu-api-id6d.onrender.com/api/players/52
 - https://tenisu-api-id6d.onrender.com/api/players/stats
 
@@ -25,12 +25,28 @@ Pour la prod : `npm run build` puis `npm start`.
 
 ## Endpoints
 
-- `GET /api/players` : liste des joueurs triée du meilleur au moins bon (par rang)
+- `GET /api/players?page=1&limit=10` : liste paginée des joueurs, triée du meilleur au moins bon (par rang)
 - `GET /api/players/:id` : un joueur (400 si l'id n'est pas valide, 404 s'il n'existe pas)
 - `GET /api/players/stats` : les statistiques
 - `POST /api/players` : ajoute un joueur (201 + header `Location`, 400 si le body est invalide)
 - `GET /health` : healthcheck
 - `GET /` : liste des endpoints disponibles
+
+Réponse de `/api/players?page=1&limit=2` :
+
+```json
+{
+  "data": [
+    { "id": 17, "firstname": "Rafael", "lastname": "Nadal", "...": "..." },
+    { "id": 52, "firstname": "Novak", "lastname": "Djokovic", "...": "..." }
+  ],
+  "count": 5,
+  "page": 1,
+  "limit": 2
+}
+```
+
+`count` est le nombre total de joueurs (toutes pages confondues). Par défaut `page=1` et `limit=10`, avec un maximum de 100 par page. Une page au-delà de la dernière renvoie `data: []`, et une valeur invalide (`page=0`, `limit=abc`) renvoie une 400.
 
 Réponse de `/api/players/stats` avec les données fournies :
 
@@ -92,6 +108,6 @@ npm run typecheck
 
 - Documentation OpenAPI / Swagger
 - Dockerfile
-- Pagination ou filtres sur la liste des joueurs
+- Filtres sur la liste des joueurs (par sexe, par pays)
 - Une vraie base de données pour persister les joueurs ajoutés
 - Mise à jour / suppression d'un joueur (PUT, DELETE)

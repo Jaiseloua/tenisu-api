@@ -32,7 +32,8 @@ describe('POST /api/players', () => {
 
     const res = await request(app).get('/api/players');
 
-    expect(res.body.map((p: { id: number }) => p.id)).toEqual([17, 52, 103, 102, 65, 95]);
+    expect(res.body.data.map((p: { id: number }) => p.id)).toEqual([17, 52, 103, 102, 65, 95]);
+    expect(res.body.count).toBe(6);
   });
 
   it('ignores an id sent by the client', async () => {

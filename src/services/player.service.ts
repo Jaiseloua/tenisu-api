@@ -1,5 +1,6 @@
 import { NotFoundError } from '../errors/app-error';
 import type { PlayerRepository } from '../repositories/player.repository';
+import type { PaginatedResult, Pagination } from '../types/pagination';
 import type { NewPlayer, Player } from '../types/player';
 import type { PlayerStatistics } from '../types/statistics';
 import { average, median, roundTo } from '../utils/math';
@@ -9,9 +10,17 @@ export class PlayerService {
   constructor(private readonly playerRepository: PlayerRepository) {}
 
   // rang 1 = meilleur joueur
-  async getPlayersSortedByRank(): Promise<Player[]> {
+  async getPlayersSortedByRank({ page, limit }: Pagination): Promise<PaginatedResult<Player>> {
     const players = await this.playerRepository.findAll();
-    return players.sort((a, b) => a.data.rank - b.data.rank);
+    players.sort((a, b) => a.data.rank - b.data.rank);
+
+    const start = (page - 1) * limit;
+    return {
+      data: players.slice(start, start + limit),
+      count: players.length,
+      page,
+      limit,
+    };
   }
 
   async getPlayerById(id: number): Promise<Player> {

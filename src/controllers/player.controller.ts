@@ -1,14 +1,15 @@
 import type { Request, Response } from 'express';
 import { BadRequestError } from '../errors/app-error';
 import type { PlayerService } from '../services/player.service';
+import { parsePagination } from '../validators/pagination.validator';
 import { parseNewPlayer } from '../validators/player.validator';
 
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
-  getAll = async (_req: Request, res: Response): Promise<void> => {
-    const players = await this.playerService.getPlayersSortedByRank();
-    res.status(200).json(players);
+  getAll = async (req: Request, res: Response): Promise<void> => {
+    const result = await this.playerService.getPlayersSortedByRank(parsePagination(req.query));
+    res.status(200).json(result);
   };
 
   getById = async (req: Request<{ id: string }>, res: Response): Promise<void> => {

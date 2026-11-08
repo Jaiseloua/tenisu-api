@@ -14,9 +14,25 @@ describe('PlayerService', () => {
         ]),
       );
 
-      const players = await service.getPlayersSortedByRank();
+      const result = await service.getPlayersSortedByRank({ page: 1, limit: 10 });
 
-      expect(players.map((p) => p.id)).toEqual([2, 3, 1]);
+      expect(result.data.map((p) => p.id)).toEqual([2, 3, 1]);
+      expect(result).toMatchObject({ count: 3, page: 1, limit: 10 });
+    });
+
+    it('returns only the requested page', async () => {
+      const service = new PlayerService(
+        new InMemoryPlayerRepository([
+          buildPlayer({ id: 1, data: { rank: 3 } }),
+          buildPlayer({ id: 2, data: { rank: 1 } }),
+          buildPlayer({ id: 3, data: { rank: 2 } }),
+        ]),
+      );
+
+      const result = await service.getPlayersSortedByRank({ page: 2, limit: 2 });
+
+      expect(result.data.map((p) => p.id)).toEqual([1]);
+      expect(result.count).toBe(3);
     });
   });
 

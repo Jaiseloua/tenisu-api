@@ -9,7 +9,7 @@ describe('GET /', () => {
   it('lists the available endpoints', async () => {
     const res = await request(app).get('/');
     expect(res.status).toBe(200);
-    expect(res.body.endpoints).toContain('GET /api/players');
+    expect(res.body.endpoints).toContain('GET /api/players/:id');
   });
 });
 
@@ -22,12 +22,39 @@ describe('GET /health', () => {
 });
 
 describe('GET /api/players', () => {
-  it('returns all players sorted by rank', async () => {
+  it('returns the first page of players sorted by rank by default', async () => {
     const res = await request(app).get('/api/players');
 
     expect(res.status).toBe(200);
-    expect(res.body.map((p: { id: number }) => p.id)).toEqual([17, 52, 102, 65, 95]);
+    expect(res.body.data.map((p: { id: number }) => p.id)).toEqual([17, 52, 102, 65, 95]);
+    expect(res.body).toMatchObject({ count: 5, page: 1, limit: 10 });
   });
+
+  it('paginates with page and limit', async () => {
+    const res = await request(app).get('/api/players?page=2&limit=2');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.map((p: { id: number }) => p.id)).toEqual([102, 65]);
+    expect(res.body).toMatchObject({ count: 5, page: 2, limit: 2 });
+  });
+
+  it('returns an empty page after the last one', async () => {
+    const res = await request(app).get('/api/players?page=10');
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toEqual([]);
+    expect(res.body.count).toBe(5);
+  });
+
+  it.each(['page=0', 'page=abc', 'limit=0', 'limit=1.5', 'limit=101', 'page=1&page=2'])(
+    'returns 400 for invalid pagination "%s"',
+    async (query) => {
+      const res = await request(app).get(`/api/players?${query}`);
+
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe('BAD_REQUEST');
+    },
+  );
 });
 
 describe('GET /api/players/:id', () => {
