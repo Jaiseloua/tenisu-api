@@ -5,6 +5,14 @@ import { PlayerService } from '../../src/services/player.service';
 
 const app = createApp();
 
+describe('GET /', () => {
+  it('lists the available endpoints', async () => {
+    const res = await request(app).get('/');
+    expect(res.status).toBe(200);
+    expect(res.body.endpoints).toContain('GET /api/players');
+  });
+});
+
 describe('GET /health', () => {
   it('returns ok', async () => {
     const res = await request(app).get('/health');

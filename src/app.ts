@@ -14,6 +14,19 @@ export function createApp(
   app.disable('x-powered-by');
   app.use(express.json({ limit: '10kb' }));
 
+  app.get('/', (_req, res) => {
+    res.status(200).json({
+      name: 'Tenisu API',
+      endpoints: [
+        'GET /api/players',
+        'GET /api/players/:id',
+        'GET /api/players/stats',
+        'POST /api/players',
+        'GET /health',
+      ],
+    });
+  });
+
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' });
   });

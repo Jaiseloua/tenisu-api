@@ -4,6 +4,14 @@ Test technique L'Atelier : une API REST qui expose des joueurs de tennis et quel
 
 Stack : Node.js 20+, TypeScript, Express 5, Jest + Supertest.
 
+**API déployée sur Render : https://tenisu-api-id6d.onrender.com**
+
+- https://tenisu-api-id6d.onrender.com/api/players
+- https://tenisu-api-id6d.onrender.com/api/players/52
+- https://tenisu-api-id6d.onrender.com/api/players/stats
+
+> Hébergement gratuit : si l'API n'a pas été appelée depuis un moment, la première requête peut prendre jusqu'à une minute (le temps que le serveur se réveille).
+
 ## Lancer le projet
 
 ```bash
@@ -22,6 +30,7 @@ Pour la prod : `npm run build` puis `npm start`.
 - `GET /api/players/stats` : les statistiques
 - `POST /api/players` : ajoute un joueur (201 + header `Location`, 400 si le body est invalide)
 - `GET /health` : healthcheck
+- `GET /` : liste des endpoints disponibles
 
 Réponse de `/api/players/stats` avec les données fournies :
 
@@ -82,7 +91,7 @@ npm run typecheck
 ## Avec plus de temps
 
 - Documentation OpenAPI / Swagger
-- Dockerfile et déploiement
+- Dockerfile
 - Pagination ou filtres sur la liste des joueurs
 - Une vraie base de données pour persister les joueurs ajoutés
 - Mise à jour / suppression d'un joueur (PUT, DELETE)
