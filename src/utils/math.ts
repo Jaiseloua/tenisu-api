@@ -1,6 +1,10 @@
+export function sum(values: readonly number[]): number {
+  return values.reduce((total, value) => total + value, 0);
+}
+
 export function average(values: readonly number[]): number | null {
   if (values.length === 0) return null;
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
+  return sum(values) / values.length;
 }
 
 export function median(values: readonly number[]): number | null {

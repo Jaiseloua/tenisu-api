@@ -1,4 +1,14 @@
-import { average, median, roundTo } from '../../src/utils/math';
+import { average, median, roundTo, sum } from '../../src/utils/math';
+
+describe('sum', () => {
+  it('returns 0 for an empty list', () => {
+    expect(sum([])).toBe(0);
+  });
+
+  it('adds all values', () => {
+    expect(sum([1, 0, 1, 1])).toBe(3);
+  });
+});
 
 describe('average', () => {
   it('returns null for an empty list', () => {
